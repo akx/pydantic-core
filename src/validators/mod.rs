@@ -484,8 +484,7 @@ pub fn build_validator<'a>(
         // decimals
         decimal::DecimalValidator,
         // tuples
-        tuple::TuplePositionalValidator,
-        tuple::TupleVariableValidator,
+        tuple::TupleValidator,
         // list/arrays
         list::ListValidator,
         // sets - unique lists
@@ -632,8 +631,7 @@ pub enum CombinedValidator {
     // sets - unique lists
     Set(set::SetValidator),
     // tuples
-    TuplePositional(tuple::TuplePositionalValidator),
-    TupleVariable(tuple::TupleVariableValidator),
+    Tuple(tuple::TupleValidator),
     // dicts/objects (recursive)
     Dict(dict::DictValidator),
     // None/null
