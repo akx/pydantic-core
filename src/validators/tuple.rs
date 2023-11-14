@@ -105,7 +105,11 @@ impl TupleValidator {
         collection_iter: &mut NextCountingIterator<impl Iterator<Item = &'data I>>,
         actual_length: Option<usize>,
     ) -> ValResult<'data, Vec<PyObject>> {
-        let expected_length = self.validators.len();
+        let expected_length = if self.variadic_item_index.is_some() {
+            actual_length.unwrap_or(self.validators.len())
+        } else {
+            self.validators.len()
+        };
         let mut output = Vec::with_capacity(expected_length);
         if let Some(variable_validator_index) = self.variadic_item_index {
             let (head_validators, [variable_validator, tail_validators @ ..]) =
@@ -197,7 +201,7 @@ impl TupleValidator {
             )?;
 
             // Generate an error if there are any extra items:
-            if let Some((index, _)) = collection_iter.next() {
+            if collection_iter.next().is_some() {
                 return Err(ValError::new(
                     ErrorType::TooLong {
                         field_type: "Tuple".to_string(),
